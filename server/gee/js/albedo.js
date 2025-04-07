@@ -1,5 +1,5 @@
 var city_names = ['Riyadh', 'Jiddah', 'Makkah Al Mukarramah', 'Al Qatif'];
-city_names = ['Riyadh']; // comment to run for all cities
+// city_names = ['Riyadh']; // comment to run for all cities
 
 var dest = 'users/shashigharti/data/processed/saudi/city_boundaries/';
 var months = -6;

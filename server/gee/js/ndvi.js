@@ -30,9 +30,12 @@ function calculateNDVI(image) {
 }
 
 var ndviParams = {
-  min: 0,
-  max: 1,
-  palette: ['blue', 'yellow', 'green']
+  min: 0,  // Minimum NDVI value, typically representing non-vegetated areas
+  max: 1,  // Maximum NDVI value, representing dense vegetation
+  palette: ['blue', 'yellow', 'green'], // Updated color palette: 
+  // blue -> low NDVI (e.g., water, barren land, or non-vegetated areas)
+  // yellow -> mid-range NDVI (e.g., urban areas or mixed land cover)
+  // green -> high NDVI (e.g., dense vegetation, forests, agricultural areas)
 };
 
 function exportNDVI(cityName) {

@@ -61,12 +61,13 @@ def get_first_day_of_week_for_date(date):
 def download_and_process_files(analysis_type):
     current_date = get_current_date()
     files = list_files_in_folder(folder_id)
+    print(len(files))
     if not os.path.exists(data_folder):
         os.makedirs(data_folder)
 
     for item in files:
-        print(f"Processing file: {item['name']}")
         if analysis_type in item["name"]:
+            print(f"Processing file: {item['name']}")
             # Enable if you want to process files for current date only
             # if current_date in item["name"]:
             file_id = item["id"]
@@ -100,11 +101,12 @@ def download_and_process_files(analysis_type):
                 download_file(file_id, destination)
 
             # Process json file
-            destination = os.path.join(analysis_folder, f"stats.json")
-            if os.path.exists(destination):
-                print(f"File {destination} already exists. Skipping download.")
-            else:
-                download_file(file_id, destination)
+            destination = os.path.join(analysis_folder, f"stats.geojson")
+            print(f"Processing file: {destination}")
+            # if os.path.exists(destination):
+            #     print(f"File {destination} already exists. Skipping download.")
+            # else:
+            download_file(file_id, destination)
 
 
 def main():
@@ -118,8 +120,10 @@ def main():
         help="The analysis type to process (default 'um').",
     )
     args = parser.parse_args()
-    analysis_types = ["um", "lst", "uhi", "ndvi", "ndbi", "albedo"]
+    # analysis_types = ["um", "lst", "uhi", "ndvi", "ndbi", "albedo"]
+    analysis_types = ["lst"]
     for analysis in analysis_types:
+        print(f"Processing analysis type: {analysis}")
         download_and_process_files(analysis)
 
 

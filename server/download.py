@@ -65,8 +65,8 @@ def download_and_process_files(analysis_type):
         os.makedirs(data_folder)
 
     for item in files:
-        print(f"Processing file: {item['name']}")
         if analysis_type in item["name"]:
+            print(f"Processing file: {item['name']}")
             # Enable if you want to process files for current date only
             # if current_date in item["name"]:
             file_id = item["id"]
@@ -93,14 +93,13 @@ def download_and_process_files(analysis_type):
             if not os.path.exists(analysis_folder):
                 os.makedirs(analysis_folder)
 
-            destination = os.path.join(analysis_folder, f"image.tif")
-            if os.path.exists(destination):
-                print(f"File {destination} already exists. Skipping download.")
-            else:
-                download_file(file_id, destination)
 
-            # Process json file
-            destination = os.path.join(analysis_folder, f"stats.json")
+            if 'tif' in file_name:
+                destination = os.path.join(analysis_folder, f"image.tif")
+                
+            if 'geojson' in file_name:
+                destination = os.path.join(analysis_folder, f"stats.geojson")
+
             if os.path.exists(destination):
                 print(f"File {destination} already exists. Skipping download.")
             else:
@@ -120,6 +119,7 @@ def main():
     args = parser.parse_args()
     analysis_types = ["um", "lst", "uhi", "ndvi", "ndbi", "albedo"]
     for analysis in analysis_types:
+        print(f"Processing analysis type: {analysis}")
         download_and_process_files(analysis)
 
 

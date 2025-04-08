@@ -8,7 +8,7 @@ ee.Initialize(project='ee-shashigharti')
 # Map = geemap.Map()
 
 city_names = ['Riyadh', 'Jiddah', 'Makkah Al Mukarramah', 'Al Qatif']
-city_names = ['riyadh']
+# city_names = ['riyadh']
 
 # Process the aoi for the cities
 # Change this to your own path

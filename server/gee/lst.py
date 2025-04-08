@@ -105,7 +105,6 @@ def export_lst_and_uhi(city_name, week_start, week_end):
     nonurban_lst = nonurban_lst.unmask(ee.Number(nonurban_mean))
 
     uhi = urban_lst.subtract(nonurban_lst).clip(city_boundary)
-    uhi_filtered = uhi.updateMask(uhi.neq(0))
 
     stats = {
         'lst_mean': lst_mean.reduceRegion(
@@ -114,7 +113,7 @@ def export_lst_and_uhi(city_name, week_start, week_end):
             scale=30,
             maxPixels=1e13
         ).get('lst'),
-        'uhi_index': uhi_filtered.reduceRegion(
+        'uhi_index': uhi.reduceRegion(
             reducer=ee.Reducer.mean(),
             geometry=city_boundary.geometry(),
             scale=30,
@@ -127,19 +126,19 @@ def export_lst_and_uhi(city_name, week_start, week_end):
     processed_date = week_start.format('YYYY-MM-dd').getInfo()
     file_name = f"{clean_name}_lst_{processed_date}"
 
-    ee.batch.Export.image.toDrive(**{
-        'image': lst_mean,
-        'description': file_name,
-        'scale': 30,
-        'region': city_boundary.geometry(),
-        'fileFormat': 'GeoTIFF',
-        'folder': 'processed',
-        'maxPixels': 1e8
-    }).start()
+    # ee.batch.Export.image.toDrive(**{
+    #     'image': lst_mean,
+    #     'description': file_name,
+    #     'scale': 30,
+    #     'region': city_boundary.geometry(),
+    #     'fileFormat': 'GeoTIFF',
+    #     'folder': 'processed',
+    #     'maxPixels': 1e8
+    # }).start()
 
     file_name = f"{clean_name}_uhi_{processed_date}"
     ee.batch.Export.image.toDrive(**{
-        'image': uhi_filtered,
+        'image': uhi,
         'description': file_name,
         'scale': 30,
         'region': city_boundary.geometry(),
@@ -148,13 +147,13 @@ def export_lst_and_uhi(city_name, week_start, week_end):
         'maxPixels': 1e8
     }).start()
 
-    file_name = f"{clean_name}_lst_{processed_date}"
-    ee.batch.Export.table.toDrive(**{
-        'collection': ee.FeatureCollection([ee.Feature(city_boundary.geometry(), stats.get('lst_mean'))]),
-        'description': file_name,
-        'fileFormat': 'GeoJSON',
-        'folder': 'processed',
-    }).start()
+    # file_name = f"{clean_name}_lst_{processed_date}"
+    # ee.batch.Export.table.toDrive(**{
+    #     'collection': ee.FeatureCollection([ee.Feature(city_boundary.geometry(), stats.get('lst_mean'))]),
+    #     'description': file_name,
+    #     'fileFormat': 'GeoJSON',
+    #     'folder': 'processed',
+    # }).start()
 
     file_name = f"{clean_name}_uhi_{processed_date}"
     ee.batch.Export.table.toDrive(**{

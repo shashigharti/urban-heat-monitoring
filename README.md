@@ -80,7 +80,7 @@ You can download and install them from:
 2. Start the React development server:
 
     ```bash
-    npm run start
+    npm start
     ```
 
     This will start the frontend server on `http://localhost:3000`. React will hot-reload changes as you develop.

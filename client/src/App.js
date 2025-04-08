@@ -291,7 +291,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className="text-center my-4">Urban Heat Analysis</h1>
+      <h1 className="text-center my-4">KSA Urban Heat Island</h1>
       <div className="container-fluid">
         <div className="row">
           <div className="col-12 mb-4">

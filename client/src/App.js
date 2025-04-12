@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import { getListItemSecondaryActionClassesUtilityClass, Slider } from '@mui/material';
+import { Slider } from '@mui/material';
 import moment from 'moment';
 import 'leaflet/dist/leaflet.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -141,6 +141,7 @@ function App() {
   const [selectedCity, setSelectedCity] = useState('riyadh');
   const [stats, setStats] = useState(null);
   const mapRef = useRef();
+  const currentLayerRef = useRef(null);
 
   const handleRadioChange = (event) => {
     setSelectedOptions(event.target.value);
@@ -260,7 +261,13 @@ function App() {
           });
 
           if (mapRef.current) {
+            // Clear previous layer
+            if (currentLayerRef.current) {
+              mapRef.current.removeLayer(currentLayerRef.current);
+            }
+
             layer.addTo(mapRef.current);
+            currentLayerRef.current = layer;
           }
         } else {
           console.warn(
@@ -342,14 +349,15 @@ function App() {
                     moment(weekDates[value]).format('MMM D, YYYY')
                   }
                   aria-labelledby="time-slider"
-                  marks={weekDates.map((date, index) => ({
-                    value: index,
-                    label: moment(date).format('MMM D, YYYY'),
-                  }))}
+                  marks={weekDates
+                    .map((date, index) => ({
+                      value: index,
+                      label: moment(date).format('MMM D, YYYY'),
+                    }))
+                    .filter((_, index) => index % 4 === 0)} // <-- change this value to adjust label density
                   sx={{
                     '& .MuiSlider-markLabel': {
-                      fontSize: '11px',
-                      transform: 'rotate(-45deg)',
+                      fontSize: '12px',
                       whiteSpace: 'nowrap',
                       lineHeight: 1.2,
                       marginTop: '15px',

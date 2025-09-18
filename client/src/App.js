@@ -17,21 +17,6 @@ const ListComponent = ({ selectedOptions }) => {
       ],
       color: (value) => (value === 1 ? 'green' : 'gray'),
     },
-    lst: {
-      name: 'Land Surface Temperature (LST)',
-      items: [
-        { id: 1, value: 24, description: 'Cold (Water bodies)' },
-        { id: 2, value: 34, description: 'Cool (Grassland)' },
-        { id: 3, value: 39, description: 'Warm  (Cropland, Mixed urban)' },
-        { id: 4, value: 50, description: 'Hot' },
-      ],
-      color: (value) => {
-        if (value < 25) return 'blue';
-        if (value < 35) return 'green';
-        if (value < 40) return 'yellow';
-        return 'red';
-      },
-    },
     albedo: {
       name: 'Albedo',
       items: [
@@ -155,17 +140,21 @@ function App() {
     setSelectedCity(event.target.value);
   };
 
-  const getWeekDates = () => {
-    let weeks = [];
-    const baseDate = moment('2025-04-01', 'YYYY-MM-DD');
-    for (let i = 0; i < 26; i++) {
-      const startOfWeek = baseDate.clone().subtract(i, 'weeks').startOf('week');
-      weeks.push(startOfWeek.format('YYYY-MM-DD'));
+  const getDates = () => {
+    let days = [];
+    const baseDate = moment('2025-03-23', 'YYYY-MM-DD');
+
+    for (let i = 0; i < 3; i++) {
+      const monthDate = baseDate.clone().subtract(i, 'month');
+      days.push(monthDate.format('YYYY-MM-DD'));
     }
-    return weeks.reverse();
+
+    console.log(days);
+
+    return days.reverse();
   };
 
-  const weekDates = getWeekDates();
+  const weekDates = getDates();
 
   useEffect(() => {
     const loadGeoTIFF = async () => {
@@ -250,14 +239,14 @@ function App() {
       };
       const selectedDate = weekDates[selectedTime];
       const tiffUrl = `http://localhost:8000/tiles/${selectedCity}/${selectedDate}/${selectedOptions}/image.tif`;
-      
+
       setLoading(true);
 
       if (mapRef.current && currentLayerRef.current) {
         mapRef.current.removeLayer(currentLayerRef.current);
         currentLayerRef.current = null;
       }
-      
+
       try {
         const response = await fetch(tiffUrl);
         setDataExists(response.status === 200);
@@ -287,7 +276,7 @@ function App() {
         }
       } catch (error) {
         console.error('Error loading GeoTIFF:', error);
-      }finally {
+      } finally {
         setLoading(false);
       }
     };
@@ -364,19 +353,17 @@ function App() {
                   value={selectedTime}
                   onChange={handleTimeChange}
                   min={0}
-                  max={25}
+                  max={weekDates.length - 1}
                   step={1}
                   valueLabelDisplay="auto"
                   valueLabelFormat={(value) =>
-                    moment(weekDates[value]).format('MMM D, YYYY')
+                    weekDates[value] ? moment(weekDates[value]).format('MMM D, YYYY') : ''
                   }
                   aria-labelledby="time-slider"
-                  marks={weekDates
-                    .map((date, index) => ({
-                      value: index,
-                      label: moment(date).format('MMM D, YYYY'),
-                    }))
-                    .filter((_, index) => index % 4 === 0)}
+                  marks={weekDates.map((date, index) => ({
+                    value: index,
+                    label: moment(date).format('MMM D, YYYY'),
+                  }))}
                   sx={{
                     '& .MuiSlider-markLabel': {
                       fontSize: '12px',
@@ -401,7 +388,6 @@ function App() {
             <div className="app__analysis">
               {[
                 { id: 'um', label: 'Urban Mask' },
-                { id: 'lst', label: 'Land Surface Temperature' },
                 { id: 'uhi', label: 'UHI (Urban Heat Island)' },
                 { id: 'ndvi', label: 'NDVI' },
                 { id: 'albedo', label: 'Albedo' },
@@ -426,6 +412,20 @@ function App() {
             <div className="app__legend">
               <h3>Legend</h3>
               <ListComponent selectedOptions={selectedOptions} />
+            </div>
+
+            <div className="app__note">
+              <h4>Note</h4>
+              <p>
+                The map values are derived from satellite data processed with Google Earth Engine (GEE).
+                Scripts for generating each index are available in the <code>gee</code> folder, and the
+                resulting images (in <code>.tif</code> format) are stored on Google Drive. You can use
+                <code>download.py</code> in the <code>server</code> folder to manually download this data.
+              </p>
+              <p>
+                This application was developed as a proof of concept (POC) within one week, so it may lack
+                certain polished features. It was a Proof of concept project for UHI(Urban Head Island).
+              </p>
             </div>
           </div>
         </div>

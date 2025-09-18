@@ -157,3 +157,13 @@ python gee/ndvi.py
 **OR**
 Alternatively, you can use the JavaScript version available in the gee/js/ folder.
 Simply copy the ndvi.js script and run it directly in the Google Earth Engine Code Editor.
+
+### Docker Setup
+Build and run the app using Docker:
+
+```
+docker build -t urban-monitoring .
+docker run -p 8000:8000 urban-monitoring
+```
+
+Access both frontend and backend at: http://localhost:8000

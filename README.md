@@ -119,9 +119,12 @@ For FastAPI, you can use `python-dotenv` to load environment variables in `serve
 
 ### Example `.env` file for FastAPI:
 ```plaintext
-GOOGLE_CREDENTIALS_PATH=path_to_credentials.json
-FOLDER_ID=your_folder_id
-DATAPATH=data
+GOOGLE_CREDENTIALS_PATH=.credentials/gdrive_credentials.json
+FOLDER_ID=1J7EJ4HSHA7HoRV-tB5Xwh19_1WVBE-Uk
+BASE_URL=http://localhost:8000
+DATA_BASE_DIR=data/tiles
+ALLOW_ORIGINS=["http://localhost:3000", "*"]
+BASE_DEST='users/shashigharti/data/processed/saudi/city_boundaries/'
 ```
 
 ### 📥 Download Data

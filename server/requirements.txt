@@ -10,3 +10,4 @@ python-dotenv
 rasterio
 earthengine-api
 geemap
+geojson

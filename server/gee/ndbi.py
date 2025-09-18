@@ -1,19 +1,21 @@
 import ee
-# import geemap
+import os
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path='../.env')
 
 ee.Authenticate()
-ee.Initialize(project='ee-shashigharti')
 
-# Map = geemap.Map()
+project_name = os.getenv('PROJECT_NAME', 'ee-shashigharti')
+ee.Initialize(project=project_name)
 
 # List of cities
-city_names = ['Riyadh', 'Jiddah', 'Makkah Al Mukarramah', 'Al Qatif']
 city_names = ['Riyadh']  # Modify this for multiple cities
 
 # Process the aoi for the cities
 # Change this to your own path
-dest = 'users/shashigharti/data/processed/saudi/city_boundaries/'
+dest = os.getenv('BASE_DEST', 'users/shashigharti/data/processed/saudi/city_boundaries/')
 
 # Set date range
 months = -6
@@ -115,8 +117,3 @@ def add_to_map(city_name):
 for city_name in city_names:
     print(f"Processing {city_name}...")
     export_ndbi(city_name)  # Uncomment to export
-    # add_to_map(city_name)
-
-# Example: Center the map on Riyadh (use a map library like Folium for visualization in Python)
-# aoi = ee.FeatureCollection(f'{dest}riyadh')
-# Map.centerObject(aoi, 10)  # Map functionality needs a library like Folium for visualization

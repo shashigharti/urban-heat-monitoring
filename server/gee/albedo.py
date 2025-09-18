@@ -1,18 +1,20 @@
 import ee
-# import geemap
+import os
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path='../.env')
 
 ee.Authenticate()
-ee.Initialize(project='ee-shashigharti')
 
-# Map = geemap.Map()
+project_name = os.getenv('PROJECT_NAME', 'ee-shashigharti')
+ee.Initialize(project=project_name)
 
-city_names = ['Riyadh', 'Jiddah', 'Makkah Al Mukarramah', 'Al Qatif']
-city_names = ['Riyadh']  # Modify this for multiple cities
+city_names = ['Riyadh']
 
 # Process the aoi for the cities
 # Change this to your own path
-dest = 'users/shashigharti/data/processed/saudi/city_boundaries/'
+dest = os.getenv('BASE_DEST', 'users/shashigharti/data/processed/saudi/city_boundaries/')
 
 # Set date range
 months = -6
@@ -126,12 +128,7 @@ def add_to_map(city_name):
         albedo = dataset.map(calculate_albedo).mean().select('Albedo').clip(city_aoi)
         week_label = week_start.format('YYYY-MM-dd').getInfo()
         label = f"{clean_name} Albedo week {week_label}"
-        # Map.addLayer(albedo, albedo_params, label)
 
 for city_name in city_names:
     print(f"Processing {city_name}...")
-    # add_to_map(city_name)
     export_albedo(city_name)
-
-# aoi = ee.FeatureCollection(f'{dest}riyadh')
-# Map.centerObject(aoi, 10)

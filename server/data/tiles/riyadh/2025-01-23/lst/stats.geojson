@@ -1,0 +1,14 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "city": "Riyadh",
+          "lst": "2.3",
+          "description": "Mean lst for Riyadh"
+        }
+      }
+    ]
+}
+  
